@@ -20,7 +20,7 @@ public class Startup
       
       // this command must come first. The filenames do not matter here
       startup.parse("@CONFIGURE LOG \"a.txt\" DOT SEQUENCE \"b.txt\" NETWORK \"c.txt\" XML \"d.txt\"");
-      
+      startup.parse("CREATE ACTUATOR ROTARY");
       // run your tests like this
       startup.parse("@exit");
    }
