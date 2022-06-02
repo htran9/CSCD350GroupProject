@@ -11,14 +11,6 @@ public class Parser {
     }
 
     public void parse() throws IOException {
-
-        /*if(commandText.equalsIgnoreCase("@exit"))
-            parserHelper.exit();
-        if(commandText.matches("^CREATE ACTUATOR.+") || commandText.matches("^CREATE SENSOR.+") || commandText.matches("^BUILD NETWORK.+"))
-        {
-            KeithParser k = new KeithParser((ParserHelper) parserHelper, commandText);
-            k.parse();
-        }*/
         String[] tokens = commandText.toUpperCase().split(" ");
         switch(tokens[0])
         {
