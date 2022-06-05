@@ -35,7 +35,9 @@ public class Parser {
                         break; //insert Hieu Tran's solution here.
 
                     case "MAPPER":
-                        break; //insert Alex Cannon's solution here.
+                        AlexParser a = new AlexParser((ParserHelper)parserHelper, commandText);
+                        a.parse();
+                        break;
                     default:
                         throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
                 }
