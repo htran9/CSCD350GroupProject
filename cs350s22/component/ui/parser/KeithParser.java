@@ -156,7 +156,7 @@ public class KeithParser {
 
             watchdogs = allWatchDogs.get(watchdogIds, false);
         }
-        //parse watchdog
+        //parse mapper
         if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("MAPPER"))
         {
             currentToken ++;
