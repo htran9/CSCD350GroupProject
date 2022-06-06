@@ -71,19 +71,15 @@ public class KeithParser {
         Identifier id;
 
         List<Identifier> groups = new ArrayList<Identifier>(0);
-        String [] groupNames;
 
         List<Identifier> reporterIds;
         List<A_Reporter> reporters = new ArrayList<A_Reporter>(0);
-        String [] reporterNames;
 
         List<Identifier> watchdogIds;
         List<A_Watchdog> watchdogs= new ArrayList<A_Watchdog>(0);
-        String [] watchdogNames;
 
         A_Mapper mapper = null;
         Identifier mapperId;
-        String mapperName;
 
         MySensor sensor;
 
@@ -94,77 +90,62 @@ public class KeithParser {
         id = Identifier.make(tokens[currentToken++]);
 
         //parse groups
-        if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("GROUPS?"))
+        if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("(i?)GROUPS?"))
         {
             currentToken++;
             int startToken = currentToken;
 
             //scan through group names until a one of the next tokens is reached or the end of the command.
 
-            while(currentToken < tokens.length && !tokens[currentToken].toUpperCase().matches("(REPORTERS?|WATCHDOGS?|MAPPER)"))
-                currentToken++;
+
+            currentToken = parserHelper.getEndIndex(tokens, startToken, "(REPORTERS?|WATCHDOGS?|MAPPER)");
 
             if(currentToken == startToken)
                 throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
-
-            groupNames = Arrays.copyOfRange(tokens,startToken , currentToken-1);
-            groups = Identifier.makeList(groupNames);
+            groups = parserHelper.getIdentifiers(tokens, startToken, currentToken);
         }
 
         //parse reporters
-        if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("REPORTERS?"))
+        if(currentToken< tokens.length && tokens[currentToken].matches("(i?)REPORTERS?"))
         {
             currentToken++;
             int startToken = currentToken;
 
             //scan through group names until a one of the next tokens is reached or the end of the command.
 
-            while(!tokens[currentToken].toUpperCase().matches("(WATCHDOGS?|MAPPER)") && currentToken < tokens.length)
-                currentToken++;
+            currentToken = parserHelper.getEndIndex(tokens, startToken, "(WATCHDOGS?|MAPPER)");
 
             if(currentToken == startToken)
                 throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
-
-            reporterNames = Arrays.copyOfRange(tokens,startToken , currentToken-1);
-            reporterIds = Identifier.makeList(reporterNames);
-
-            SymbolTable<A_Reporter> allReporters = parserHelper.getSymbolTableReporter();
-
-            reporters = allReporters.get(reporterIds, false);
+            reporterIds = parserHelper.getIdentifiers(tokens, startToken, currentToken);
+            SymbolTable<A_Reporter> allReporters = parserHelper.getSymbolTableReporter();//get the reporter table
+            reporters = allReporters.get(reporterIds, false);//get the reporters
         }
         //parse watchdogs
-        if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("WATCHDOGS?"))
+        if(currentToken< tokens.length && tokens[currentToken].matches("(i?)WATCHDOGS?"))
         {
             currentToken++;
             int startToken = currentToken;
 
-            //scan through group names until a one of the next tokens is reached or the end of the command.
-
-            while(!tokens[currentToken].toUpperCase().matches("MAPPER") && currentToken < tokens.length)
-                currentToken++;
+            currentToken = parserHelper.getEndIndex(tokens, startToken,"Mapper");
 
             if(currentToken == startToken)
                 throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
-
-            watchdogNames = Arrays.copyOfRange(tokens,startToken , currentToken-1);
-            watchdogIds = Identifier.makeList(watchdogNames);
-
-            SymbolTable<A_Watchdog> allWatchDogs = parserHelper.getSymbolTableWatchdog();
-
-            watchdogs = allWatchDogs.get(watchdogIds, false);
+            watchdogIds = parserHelper.getIdentifiers(tokens, startToken,currentToken);
+            SymbolTable<A_Watchdog> allWatchDogs = parserHelper.getSymbolTableWatchdog();//get the symbol table.
+            watchdogs = allWatchDogs.get(watchdogIds, false);//get the watchdogs
         }
-        //parse watchdog
+        //parse mapper
         if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("MAPPER"))
         {
             currentToken ++;
             if(currentToken == tokens.length)
                 throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
-            mapperName = tokens[currentToken];
-            mapperId = Identifier.make(mapperName);
+            mapperId = Identifier.make(tokens[currentToken]);
 
             SymbolTable<A_Mapper> allMappers = parserHelper.getSymbolTableMapper();
             mapper = allMappers.get(mapperId);
@@ -183,7 +164,6 @@ public class KeithParser {
     private void buildNetwork()//unfinished
     {
         //System.out.println("BUILDING NETWORK");
-
 
     }
 }
