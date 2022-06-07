@@ -3,6 +3,7 @@ package cs350s22.component.ui.parser;
 import cs350s22.component.logger.LoggerActuator;
 import cs350s22.component.logger.LoggerMessage;
 import cs350s22.component.logger.LoggerMessageSequencing;
+import cs350s22.support.Clock;
 import cs350s22.support.Filespec;
 
 import java.io.IOException;
@@ -50,6 +51,35 @@ public class Parser {
                 break;
 
             case "@CLOCK": //In progress
+                if(tokens.length < 2)
+                    throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
+                Clock clock = Clock.getInstance();
+                switch(tokens[1].toUpperCase())
+                {
+                    case "PAUSE":
+                        clock.isActive(false);
+                        break;
+                    case "RESUME":
+                        clock.isActive(true);
+                        break;
+                    case "ONESTEP":
+                        if(tokens.length > 2)
+                        {
+                            int count = Integer.parseInt(tokens[2]);
+                            clock.onestep(count);
+                        }
+                        else clock.onestep();
+                        break;
+                    case "SET":
+                        if(tokens.length < 4||!tokens[2].equalsIgnoreCase("RATE"))
+                            throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
+
+                        int multiplier = Integer.parseInt(tokens[3]);
+                        clock.setRate(multiplier);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
+                }
                 break;
             case "@EXIT":
                 parserHelper.exit();
@@ -70,7 +100,7 @@ public class Parser {
                 String xml = tokens[9].replaceAll("\"","");
                 LoggerMessage.initialize(Filespec.make(log));
                 LoggerMessageSequencing.initialize(Filespec.make(dot), Filespec.make(network));
-                //LoggerActuator.initialize(Filespec.make(xml));
+                LoggerActuator.initialize(Filespec.make(xml));
             }
             break;
             default:
