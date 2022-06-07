@@ -33,7 +33,7 @@ public class Startup
    {
       System.out.println("PARSE> "+ parse);
       
-      Parser parser = new Parser(_parserHelper, parse);
+         Parser parser = new Parser(_parserHelper, parse);
       
       parser.parse();
    }
