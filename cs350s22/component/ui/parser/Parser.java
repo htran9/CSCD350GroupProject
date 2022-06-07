@@ -33,6 +33,8 @@ public class Parser {
                         //Other CREATE Commands can go under here
                     case "REPORTER":
                     case "WATCHDOG":
+                        HieuParser hieuParser = new HieuParser(parserHelper, commandText);
+                        hieuParser.parse();
                         break; //insert Hieu Tran's solution here.
 
                     case "MAPPER":
