@@ -170,25 +170,28 @@ public class KeithParser {
         if(tokens.length < 5)
             throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
-        String [] names;
+
         List<Identifier> componentIds;
+
         A_ControllerForwarding controllerMaster = parserHelper.getControllerMaster();
         SymbolTable<A_Actuator> actuatorSymbolTable = parserHelper.getSymbolTableActuator();
         SymbolTable<A_Sensor> sensorSymbolTable = parserHelper.getSymbolTableSensor();
         SymbolTable<A_Controller> controllerSymbolTable = parserHelper.getSymbolTableController();
 
 
-        names = Arrays.copyOfRange(tokens,5, tokens.length -1);
 
-        componentIds = Identifier.makeList(names);
+        componentIds = parserHelper.getIdentifiers(tokens, 4,tokens.length);
 
         List<A_Actuator> actuators = actuatorSymbolTable.get(componentIds,true);
         List<A_Sensor> sensors = sensorSymbolTable.get(componentIds,true);
+
+
         List<A_Controller> controllers = controllerSymbolTable.get(componentIds,true);
 
         controllerMaster.addComponents(actuators);
         controllerMaster.addComponents(controllers);
         controllerMaster.addComponents(sensors);
 
+        parserHelper.getNetwork().writeOutput();
     }
 }

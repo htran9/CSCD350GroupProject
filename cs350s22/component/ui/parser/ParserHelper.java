@@ -28,7 +28,7 @@ public class ParserHelper extends A_ParserHelper
       if(start >= end)
          out = new ArrayList<Identifier>(0);
       else
-         out = Identifier.makeList(Arrays.copyOfRange(tokens, start,end-1));
+         out = Identifier.makeList(Arrays.copyOfRange(tokens, start,end));
       return out;
    }
 }
