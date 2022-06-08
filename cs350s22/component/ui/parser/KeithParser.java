@@ -1,5 +1,8 @@
 package cs350s22.component.ui.parser;
 
+import cs350s22.component.actuator.A_Actuator;
+import cs350s22.component.controller.A_Controller;
+import cs350s22.component.controller.A_ControllerForwarding;
 import cs350s22.component.sensor.A_Sensor;
 import cs350s22.component.sensor.mapper.A_Mapper;
 import cs350s22.component.sensor.reporter.A_Reporter;
@@ -138,7 +141,7 @@ public class KeithParser {
             SymbolTable<A_Watchdog> allWatchDogs = parserHelper.getSymbolTableWatchdog();//get the symbol table.
             watchdogs = allWatchDogs.get(watchdogIds, false);//get the watchdogs
         }
-        //parse mapper
+        //parse Mapper
         if(currentToken< tokens.length && tokens[currentToken].toUpperCase().matches("MAPPER"))
         {
             currentToken ++;
@@ -164,6 +167,31 @@ public class KeithParser {
     private void buildNetwork()//unfinished
     {
         //System.out.println("BUILDING NETWORK");
+        if(tokens.length < 5)
+            throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
+
+        List<Identifier> componentIds;
+
+        A_ControllerForwarding controllerMaster = parserHelper.getControllerMaster();
+        SymbolTable<A_Actuator> actuatorSymbolTable = parserHelper.getSymbolTableActuator();
+        SymbolTable<A_Sensor> sensorSymbolTable = parserHelper.getSymbolTableSensor();
+        SymbolTable<A_Controller> controllerSymbolTable = parserHelper.getSymbolTableController();
+
+
+
+        componentIds = parserHelper.getIdentifiers(tokens, 4,tokens.length);
+
+        List<A_Actuator> actuators = actuatorSymbolTable.get(componentIds,true);
+        List<A_Sensor> sensors = sensorSymbolTable.get(componentIds,true);
+
+
+        List<A_Controller> controllers = controllerSymbolTable.get(componentIds,true);
+
+        controllerMaster.addComponents(actuators);
+        controllerMaster.addComponents(controllers);
+        controllerMaster.addComponents(sensors);
+
+        parserHelper.getNetwork().writeOutput();
     }
 }
