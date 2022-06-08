@@ -86,19 +86,19 @@ public class KeithParser {
         currentToken += 2;//Move to the value of LeadIn
 
 
-        leadIn = Double.ParseDouble(tokens[currentToken]);
+        leadIn = Double.parseDouble(tokens[currentToken]);
         currentToken += 2;//Move to the value of LeadOut
 
-        leadOut = Double.ParseDouble(tokens[currentToken]);
+        leadOut = Double.parseDouble(tokens[currentToken]);
         currentToken += 2;//Move to the value of relax
 
-        relax = Double.ParseDouble(tokens[currentToken]);
+        relax = Double.parseDouble(tokens[currentToken]);
         currentToken += 3;//Move to the value of velocityLimit
 
-        velocityLimit = Double.ParseDouble(tokens[currentToken]);
+        velocityLimit = Double.parseDouble(tokens[currentToken]);
         currentToken += 3; //move to value of min
 
-        min = Double.ParseDouble(tokens[currentToken]);
+        min = Double.parseDouble(tokens[currentToken]);
         currentToken +=2;//move to value of max
 
         max = Double.parseDouble(tokens[currentToken]);
@@ -229,7 +229,7 @@ public class KeithParser {
     }
     private void buildNetwork()
     {
-        if(!commandText.matches("(i?)BUILD NETWORK WITH COMPONENTS .*"))
+        if(!commandText.matches("(i?)BUILD NETWORK WITH COMPONENTS? .*"))
             throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);
         //System.out.println("BUILDING NETWORK");
         if(tokens.length < 5)

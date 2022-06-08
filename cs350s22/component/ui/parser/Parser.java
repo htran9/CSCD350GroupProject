@@ -75,7 +75,6 @@ public class Parser {
                 String xml = tokens[9].replaceAll("\"","");
                 LoggerMessage.initialize(Filespec.make(log));
                 LoggerMessageSequencing.initialize(Filespec.make(dot), Filespec.make(network));
-                LoggerActuator.initialize(Filespec.make(xml));
             }
             break;
             default:
