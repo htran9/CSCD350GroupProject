@@ -19,7 +19,7 @@ public class Parser {
     }
 
     public void parse() throws IOException, ParseException {
-
+        HieuParser hieuParser = new HieuParser(parserHelper, commandText);
         switch(tokens[0].toUpperCase())
         {
             case "CREATE":
@@ -34,8 +34,8 @@ public class Parser {
                         break;
                     //Other CREATE Commands can go under here
                     case "REPORTER":
+                        hieuParser.parse();
                     case "WATCHDOG":
-                        HieuParser hieuParser = new HieuParser(parserHelper, commandText);
                         hieuParser.parse();
                         break;
 
