@@ -19,7 +19,7 @@ public class Startup
       Startup startup = new Startup();
       
       // this command must come first. The filenames do not matter here
-      startup.parse("@CONFIGURE LOG \"a.txt\" DOT SEQUENCE \"b.txt\" NETWORK \"c.txt\" XML \"d.txt\"");
+      //startup.parse("@CONFIGURE LOG \"a.txt\" DOT SEQUENCE \"b.txt\" NETWORK \"c.txt\" XML \"d.txt\"");
       startup.parse("@CLOCK PAUSE");
       startup.parse("@CLOCK ONESTEP 20");
       startup.parse("CREATE SENSOR POSITION mySensor");
@@ -27,7 +27,8 @@ public class Startup
       startup.parse("BUILD NETWORK WITH COMPONENT myac");
       startup.parse("@CLOCK ONESTEP");
 
-
+      startup.parse("CREATE WATCHDOG BAND myWatchdog1 MODE INSTANTANOUS THRESHOLD LOW 1 HIGH 3");
+      startup.parse("CREATE REPORTER CHANGE myReporter1 NOTIFY IDS myActuator1 myActuator2 DELTA 3");
       // run your tests like this
       startup.parse("@exit");
    }
