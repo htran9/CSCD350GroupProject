@@ -1,6 +1,7 @@
 package cs350s22.component.ui.parser;
 
 import java.io.IOException;
+import java.util.*;
 
 import cs350s22.component.sensor.mapper.*;
 import cs350s22.component.sensor.mapper.function.equation.*;
@@ -8,6 +9,7 @@ import cs350s22.component.sensor.mapper.function.interpolator.*;
 import cs350s22.component.sensor.mapper.function.interpolator.loader.MapLoader;
 import cs350s22.component.ui.CommandLineInterface;
 import cs350s22.message.A_Message;
+import cs350s22.message.actuator.MessageActuatorReportPosition;
 import cs350s22.message.actuator.MessageActuatorRequestPosition;
 import cs350s22.message.ping.MessagePing;
 import cs350s22.support.*;
@@ -28,16 +30,16 @@ public class AlexParser {
             throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
         if(commandText.toUpperCase().matches("^CREATE MAPPER.+"))
         {
-            createMapper();
+            createMapper();//executes commands C1 C2 C3 C4
         } 
         else if(commandText.toUpperCase().matches("^SEND MESSAGE.+")){
-        	sendMessage();
+        	sendMessage();//Executes commands D1 D2 D3
         }
         else
             throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
 
     }
-    private void createMapper() throws IOException//unfinished
+    private void createMapper() throws IOException
     {
 
         System.out.println("CREATING MAPPER");
@@ -134,14 +136,114 @@ public class AlexParser {
         	
         	double value = Double.parseDouble(tokens[tokens.length-1]);
         	
+        	A_Message message;
         	
+        	if(tokens[2].matches("ID") || tokens[2].matches("IDS")) {
+        		
+        		if(commandText.contains("GROUPS")) {
+        			
+        			int gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
+        			message = createRequestMessage(2, gIndex, "ID", value);
+        			cLI.issueMessage(message);
+        			
+        			message = createRequestMessage(gIndex, tokens.length-2, "GROUPS", value);
+        			cLI.issueMessage(message);
+        			
+        		}
+        		else {	
+        			
+        			message = createRequestMessage(2, tokens.length-2, "ID", value);
+        			cLI.issueMessage(message);
+        			
+        		}
+        		
+        	}
+        	
+        	else if(tokens[2].matches("GROUPS")) {
+        		
+        		message = createRequestMessage(2, tokens.length-2, "GROUPS", value);
+    			cLI.issueMessage(message);
+        		
+        	}
+        	else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
         	
         }
         else if(tokens[tokens.length-1].matches("REPORT")) {
         	
+        	A_Message message;
         	
+        	if(tokens[2].matches("ID") || tokens[2].matches("IDS")) {
+        		
+        		if(commandText.contains("GROUPS")) {
+        			
+        			int gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
+        			message = createReportMessage(2, gIndex, "ID");
+        			cLI.issueMessage(message);
+        			
+        			message = createReportMessage(gIndex, tokens.length-2, "GROUPS");
+        			cLI.issueMessage(message);
+        			
+        		}
+        		else {	
+        			
+        			message = createReportMessage(2, tokens.length-2, "ID");
+        			cLI.issueMessage(message);
+        			
+        		}
+        		
+        	}
         	
+        	else if(tokens[2].matches("GROUPS")) {
+        		
+        		message = createReportMessage(2, tokens.length-2, "GROUPS");
+    			cLI.issueMessage(message);
+        		
+        	}
+        	else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
         }
+        else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
 
     }
+    
+    private A_Message createRequestMessage(int startIndex, int endIndex, String matcher, double value) {
+    	
+    	List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
+    	
+    	if(matcher.matches("ID") || matcher.matches("IDS")) {
+    		
+    		A_Message message = new MessageActuatorRequestPosition(idList,value);
+    		return message;
+    	}
+    	else if(matcher.matches("GROUPS")) {
+    	
+    		A_Message message = new MessageActuatorRequestPosition(idList,value,0);
+    		return message;
+    		
+    	}
+    	else
+    		return null;
+    	
+    }
+    
+    private A_Message createReportMessage(int startIndex, int endIndex, String matcher) {
+    	
+List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
+    	
+    	if(matcher.matches("ID") || matcher.matches("IDS")) {
+    		
+    		A_Message message = new MessageActuatorReportPosition(idList);
+    		return message;
+    		
+    	}
+    	else if(matcher.matches("GROUPS")) {
+    	
+    		A_Message message = new MessageActuatorReportPosition(idList,0);
+    		return message;
+    		
+    	}
+    	else
+    		return null;
+    	
+    }
+    
 }
