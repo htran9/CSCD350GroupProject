@@ -45,7 +45,7 @@ public class HieuParser {
             for(int i = 0; i < parseCommandText.length; i++) {
                 if(parseCommandText[i].equalsIgnoreCase("IDS") || parseCommandText[i].equalsIgnoreCase("ID")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if((!(parseCommandText[j].equalsIgnoreCase("GROUPS")) || !(parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("DELTA"))) {
+                        if(!((parseCommandText[j].equalsIgnoreCase("GROUPS")) || (parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("DELTA"))) {
                             ids.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
@@ -73,7 +73,7 @@ public class HieuParser {
             for(int i = 5; i < parseCommandText.length; i++) {
                 if(parseCommandText[i].equalsIgnoreCase("IDS") || parseCommandText[i].equalsIgnoreCase("ID")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if((!(parseCommandText[j].equalsIgnoreCase("GROUPS")) || !(parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("FREQUENCY"))) {
+                        if(!((parseCommandText[j].equalsIgnoreCase("GROUPS")) || (parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("FREQUENCY"))) {
                             ids.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
