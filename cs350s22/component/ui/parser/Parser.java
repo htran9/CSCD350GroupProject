@@ -51,7 +51,9 @@ public class Parser {
                 KeithParser k = new KeithParser((ParserHelper) parserHelper, commandText);
                 k.parse();
                 break;
-            case "SEND": //TBD
+            case "SEND":
+                AlexParser a = new AlexParser((ParserHelper)parserHelper, commandText);
+                a.parse();
                 break;
             case "@CLOCK":
                 parseClock();
