@@ -1,11 +1,10 @@
-package cs350s22.component.ui.parser;
-
 import java.io.IOException;
 import java.util.*;
 
 import cs350s22.component.sensor.mapper.*;
 import cs350s22.component.sensor.mapper.function.equation.*;
 import cs350s22.component.sensor.mapper.function.interpolator.*;
+import cs350s22.component.sensor.mapper.function.interpolator.loader.A_MapLoader;
 import cs350s22.component.sensor.mapper.function.interpolator.loader.MapLoader;
 import cs350s22.component.ui.CommandLineInterface;
 import cs350s22.message.A_Message;
@@ -42,13 +41,13 @@ public class AlexParser {
     private void createMapper() throws IOException
     {
 
-        System.out.println("CREATING MAPPER");
+        //System.out.println("CREATING MAPPER");
         SymbolTable<A_Mapper> mapperTable = parserHelper.getSymbolTableMapper();
         Identifier mapID = Identifier.make(tokens[2]);
         
         if(tokens[3].matches("EQUATION"))
         {
-            System.out.println("CREATING EQUATION MAPPER");
+            //System.out.println("CREATING EQUATION MAPPER");
             
             if(tokens[4].matches("PASSTHROUGH")){//creates equationPassthrough object, passes it into MapperEquation object then adds to list
             	
@@ -79,23 +78,23 @@ public class AlexParser {
             	mapperTable.add(mapID, eqMapper);
             	
             }
-            else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
+            else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
         }
         else if(tokens[3].matches("INTERPOLATION"))
         {
             System.out.println("CREATING INTERPOLATION MAPPER");
             
-            Filespec file = Filespec.make(tokens[6]);            
-            MapLoader mpLd = new MapLoader(file);
-            InterpolationMap iMapper = mpLd.load();
+            Filespec file = Filespec.make(tokens[6]);
+            A_MapLoader mpLd = new MapLoader(file);
+            //InterpolationMap iMapper = mpLd.load();
             
             if(tokens[4].matches("LINEAR")) {
             	
             	System.out.println("CREATING LINEAR INTERPOLATION MAPPER");
             	
-            	InterpolatorLinear iplMap = new InterpolatorLinear(iMapper);
-            	MapperInterpolation mapInt = new MapperInterpolation(iplMap);
-            	mapperTable.add(mapID, mapInt);
+            	//InterpolatorLinear iplMap = new InterpolatorLinear(iMapper);
+            	//MapperInterpolation mapInt = new MapperInterpolation(iplMap);
+            	//mapperTable.add(mapID, mapInt);
             	
             }
             
@@ -103,22 +102,22 @@ public class AlexParser {
             	
             	System.out.println("CREATING SPLINE INTERPOLATION MAPPER");
             	
-            	InterpolatorSpline ipsMap = new InterpolatorSpline(iMapper);
-            	MapperInterpolation mapInt = new MapperInterpolation(ipsMap);
-            	mapperTable.add(mapID, mapInt);
+            	//InterpolatorSpline ipsMap = new InterpolatorSpline(iMapper);
+            	//MapperInterpolation mapInt = new MapperInterpolation(ipsMap);
+            	//mapperTable.add(mapID, mapInt);
             	
             }
-            else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
+            else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
             
             
         }
         else
-            throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
+            throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);
 
 
 
     }
-    private void sendMessage()//unfinished
+    private void sendMessage()
     {
         System.out.println("SENDING MESSAGE...");
         
@@ -165,10 +164,11 @@ public class AlexParser {
     			cLI.issueMessage(message);
         		
         	}
-        	else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
+        	else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
         	
         }
         else if(tokens[tokens.length-1].matches("REPORT")) {
+        	
         	
         	A_Message message;
         	
@@ -199,9 +199,9 @@ public class AlexParser {
     			cLI.issueMessage(message);
         		
         	}
-        	else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
+        	else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
         }
-        else {throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);}
+        else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
 
     }
     
