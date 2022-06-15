@@ -88,15 +88,15 @@ public class AlexParser {
             
             Filespec file = Filespec.make(tokens[6]);
             A_MapLoader mpLd = new MapLoader(file);
-            //InterpolationMap iMapper = mpLd.load();
+            InterpolationMap iMapper = mpLd.load();
             
             if(tokens[4].matches("LINEAR")) {
             	
             	System.out.println("CREATING LINEAR INTERPOLATION MAPPER");
             	
-            	//InterpolatorLinear iplMap = new InterpolatorLinear(iMapper);
-            	//MapperInterpolation mapInt = new MapperInterpolation(iplMap);
-            	//mapperTable.add(mapID, mapInt);
+            	InterpolatorLinear iplMap = new InterpolatorLinear(iMapper);
+            	MapperInterpolation mapInt = new MapperInterpolation(iplMap);
+            	mapperTable.add(mapID, mapInt);
             	
             }
             
@@ -104,9 +104,9 @@ public class AlexParser {
             	
             	System.out.println("CREATING SPLINE INTERPOLATION MAPPER");
             	
-            	//InterpolatorSpline ipsMap = new InterpolatorSpline(iMapper);
-            	//MapperInterpolation mapInt = new MapperInterpolation(ipsMap);
-            	//mapperTable.add(mapID, mapInt);
+            	InterpolatorSpline ipsMap = new InterpolatorSpline(iMapper);
+            	MapperInterpolation mapInt = new MapperInterpolation(ipsMap);
+            	mapperTable.add(mapID, mapInt);
             	
             }
             else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
