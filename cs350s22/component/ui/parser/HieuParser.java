@@ -22,16 +22,17 @@ public class HieuParser {
     }
 
     public void parse() throws RuntimeException {
-        String[] parseCommandText = commandText.toUpperCase().split(" ");
+        String[] parseCommandText = commandText.split(" ");
 
-        if (parseCommandText[1].equals("WATCHDOG")) {
+
+        if (parseCommandText[1].equalsIgnoreCase("WATCHDOG")) {
             WatchDog(parseCommandText);
         }
-        if(parseCommandText[1].equals("REPORTER")) {
+        if(parseCommandText[1].equalsIgnoreCase("REPORTER")) {
             Reporter(parseCommandText);
         }
     }
-    private void Reporter(String[] parseCommandText) {
+    private void Reporter(String[] parseCommandText) throws RuntimeException {
 
         Identifier id = Identifier.make(parseCommandText[3]);
         List<Identifier> ids = new ArrayList<>();
@@ -42,18 +43,18 @@ public class HieuParser {
 
         if(parseCommandText[2].equals("CHANGE")) {
             for(int i = 0; i < parseCommandText.length; i++) {
-                if(parseCommandText[i].equals("IDS")) {
+                if(parseCommandText[i].equalsIgnoreCase("IDS") || parseCommandText[i].equalsIgnoreCase("ID")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if(!(parseCommandText[j].equals("GROUPS")) && ! (parseCommandText[j].equals("DELTA"))) {
+                        if((!(parseCommandText[j].equalsIgnoreCase("GROUPS")) || !(parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("DELTA"))) {
                             ids.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
                         }
                     }
                 }
-                if(parseCommandText[i].equals("GROUPS")) {
+                if(parseCommandText[i].equalsIgnoreCase("GROUPS") || parseCommandText[i].equalsIgnoreCase("GROUP")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if(!(parseCommandText[j].equals("DELTA"))) {
+                        if(!(parseCommandText[j].equalsIgnoreCase("DELTA"))) {
                             groups.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
@@ -68,20 +69,20 @@ public class HieuParser {
             }
             parserHelper.getSymbolTableReporter().add(id, reporterChange);
         }
-        else if(parseCommandText[2].equals("FREQUENCY")) {
-            for(int i = 0; i < parseCommandText.length; i++) {
-                if(parseCommandText[i].equals("IDS")) {
+        else if(parseCommandText[2].equalsIgnoreCase("FREQUENCY")) {
+            for(int i = 5; i < parseCommandText.length; i++) {
+                if(parseCommandText[i].equalsIgnoreCase("IDS") || parseCommandText[i].equalsIgnoreCase("ID")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if(!(parseCommandText[j].equals("GROUPS"))) {
+                        if((!(parseCommandText[j].equalsIgnoreCase("GROUPS")) || !(parseCommandText[j].equalsIgnoreCase("GROUP"))) && !(parseCommandText[j].equalsIgnoreCase("FREQUENCY"))) {
                             ids.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
                         }
                     }
                 }
-                if(parseCommandText[i].equals("GROUPS")) {
+                if(parseCommandText[i].equalsIgnoreCase("GROUPS") || parseCommandText[i].equalsIgnoreCase("GROUP")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
-                        if(!(parseCommandText[j].equals("FREQUENCY"))) {
+                        if(!(parseCommandText[j].equalsIgnoreCase("FREQUENCY"))) {
                             groups.add(Identifier.make(parseCommandText[j]));
                         }else {
                             break;
@@ -102,9 +103,9 @@ public class HieuParser {
     }
 
     private void WatchDog(String[] parseCommandText) throws RuntimeException{
-        String watchdogType = parseCommandText[2];
+        String watchdogType = parseCommandText[2].toUpperCase();
         Identifier id = Identifier.make(parseCommandText[3]);
-        String mode = parseCommandText[5];
+        String mode = parseCommandText[5].toUpperCase();
         WatchdogModeInstantaneous instantaneous = new WatchdogModeInstantaneous();
         WatchdogModeAverage average =  new WatchdogModeAverage();
         WatchdogModeStandardDeviation standardDeviation = new WatchdogModeStandardDeviation();
