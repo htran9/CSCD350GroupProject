@@ -29,11 +29,11 @@ public class AlexParser {
     {
         if(tokens.length < 2)
             throw new IllegalArgumentException("Malformed command:" + System.lineSeparator() + commandText);
-        if(commandText.toUpperCase().matches("^CREATE MAPPER.+"))
+        if(commandText.toUpperCase().matches("(i?)^CREATE MAPPER.+"))
         {
             createMapper();//executes commands C1 C2 C3 C4
         } 
-        else if(commandText.toUpperCase().matches("^SEND MESSAGE.+")){
+        else if(commandText.toUpperCase().matches("(i?)^SEND MESSAGE.+")){
         	sendMessage();//Executes commands D1 D2 D3
         }
         else
@@ -43,15 +43,15 @@ public class AlexParser {
     private void createMapper() throws IOException
     {
 
-        //System.out.println("CREATING MAPPER");
+        
         SymbolTable<A_Mapper> mapperTable = parserHelper.getSymbolTableMapper();
         Identifier mapID = Identifier.make(tokens[2]);
         
-        if(tokens[3].matches("EQUATION"))
+        if(tokens[3].matches("(i?)EQUATION"))
         {
-            //System.out.println("CREATING EQUATION MAPPER");
             
-            if(tokens[4].matches("PASSTHROUGH")){//creates equationPassthrough object, passes it into MapperEquation object then adds to list
+            
+            if(tokens[4].matches("(i?)PASSTHROUGH")){//creates equationPassthrough object, passes it into MapperEquation object then adds to list
             	
             	System.out.println("CREATING EQUATION PASSTHROUGH MAPPER");
             	
@@ -60,7 +60,7 @@ public class AlexParser {
             	mapperTable.add(mapID, eqMapper);
             	
             }
-            else if(tokens[4].matches("SCALE")) {
+            else if(tokens[4].matches("(i?)SCALE")) {
             	
             	System.out.println("CREATING EQUATION SCALE MAPPER");
             	
@@ -70,7 +70,7 @@ public class AlexParser {
             	mapperTable.add(mapID, eqMapper);
             	
             }
-            else if(tokens[4].matches("NORMALIZE")) {
+            else if(tokens[4].matches("(i?)NORMALIZE")) {
             	
             	System.out.println("CREATING EQUATION NORMALIZE MAPPER");
             	
@@ -82,7 +82,7 @@ public class AlexParser {
             }
             else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
         }
-        else if(tokens[3].matches("INTERPOLATION"))
+        else if(tokens[3].matches("(i?)INTERPOLATION"))
         {
             System.out.println("CREATING INTERPOLATION MAPPER");
             
@@ -90,7 +90,7 @@ public class AlexParser {
             A_MapLoader mpLd = new MapLoader(file);
             InterpolationMap iMapper = mpLd.load();
             
-            if(tokens[4].matches("LINEAR")) {
+            if(tokens[4].matches("(i?)LINEAR")) {
             	
             	System.out.println("CREATING LINEAR INTERPOLATION MAPPER");
             	
@@ -100,7 +100,7 @@ public class AlexParser {
             	
             }
             
-            else if(tokens[4].matches("SPLINE")) {
+            else if(tokens[4].matches("(i?)SPLINE")) {
             	
             	System.out.println("CREATING SPLINE INTERPOLATION MAPPER");
             	
@@ -125,7 +125,7 @@ public class AlexParser {
         
         CommandLineInterface cLI = parserHelper.getCommandLineInterface();
         
-        if(tokens[2].matches("PING")) {
+        if(tokens[2].matches("(i?)PING")) {
         	
         	System.out.println("SENDING PING");
         	
@@ -133,15 +133,15 @@ public class AlexParser {
         	cLI.issueMessage(ping);
         	
         }
-        else if(tokens[tokens.length-2].matches("REQUEST")) {
+        else if(tokens[tokens.length-2].matches("(i?)REQUEST")) {
         	
         	double value = Double.parseDouble(tokens[tokens.length-1]);
         	
         	A_Message message;
         	
-        	if(tokens[2].matches("ID") || tokens[2].matches("IDS")) {
+        	if(tokens[2].matches("(i?)ID") || tokens[2].matches("(i?)IDS")) {
         		
-        		if(commandText.contains("GROUPS")) {
+        		if(commandText.contains("(i?)GROUPS")) {
         			
         			int gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
         			message = createRequestMessage(2, gIndex, "ID", value);
@@ -160,7 +160,7 @@ public class AlexParser {
         		
         	}
         	
-        	else if(tokens[2].matches("GROUPS")) {
+        	else if(tokens[2].matches("(i?)GROUPS")) {
         		
         		message = createRequestMessage(2, tokens.length-2, "GROUPS", value);
     			cLI.issueMessage(message);
@@ -169,14 +169,14 @@ public class AlexParser {
         	else {throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);}
         	
         }
-        else if(tokens[tokens.length-1].matches("REPORT")) {
+        else if(tokens[tokens.length-1].matches("(i?)REPORT")) {
         	
         	
         	A_Message message;
         	
-        	if(tokens[2].matches("ID") || tokens[2].matches("IDS")) {
+        	if(tokens[2].matches("(i?)ID") || tokens[2].matches("(i?)IDS")) {
         		
-        		if(commandText.contains("GROUPS")) {
+        		if(commandText.contains("(i?)GROUPS")) {
         			
         			int gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
         			message = createReportMessage(2, gIndex, "ID");
@@ -195,7 +195,7 @@ public class AlexParser {
         		
         	}
         	
-        	else if(tokens[2].matches("GROUPS")) {
+        	else if(tokens[2].matches("(i?)GROUPS")) {
         		
         		message = createReportMessage(2, tokens.length-2, "GROUPS");
     			cLI.issueMessage(message);
@@ -211,12 +211,12 @@ public class AlexParser {
     	
     	List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
     	
-    	if(matcher.matches("ID") || matcher.matches("IDS")) {
+    	if(matcher.matches("(i?)ID") || matcher.matches("(i?)IDS")) {
     		
     		A_Message message = new MessageActuatorRequestPosition(idList,value);
     		return message;
     	}
-    	else if(matcher.matches("GROUPS")) {
+    	else if(matcher.matches("(i?)GROUPS")) {
     	
     		A_Message message = new MessageActuatorRequestPosition(idList,value,0);
     		return message;
@@ -231,13 +231,13 @@ public class AlexParser {
     	
 List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
     	
-    	if(matcher.matches("ID") || matcher.matches("IDS")) {
+    	if(matcher.matches("(i?)ID") || matcher.matches("(i?)IDS")) {
     		
     		A_Message message = new MessageActuatorReportPosition(idList);
     		return message;
     		
     	}
-    	else if(matcher.matches("GROUPS")) {
+    	else if(matcher.matches("(i?)GROUPS")) {
     	
     		A_Message message = new MessageActuatorReportPosition(idList,0);
     		return message;
