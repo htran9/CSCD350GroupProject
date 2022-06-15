@@ -20,7 +20,7 @@ public class AlexParser {
     private ParserHelper parserHelper;
     public AlexParser( final ParserHelper parserHelper, final String commandText)
     {
-        this.commandText = commandText.toUpperCase();
+        this.commandText = commandText;
         tokens = this.commandText.split(" ");
         this.parserHelper = parserHelper;
     }
@@ -85,7 +85,7 @@ public class AlexParser {
         {
             System.out.println("CREATING INTERPOLATION MAPPER");
             
-            Filespec file = new Filespec(tokens[6]);            
+            Filespec file = Filespec.make(tokens[6]);            
             MapLoader mpLd = new MapLoader(file);
             InterpolationMap iMapper = mpLd.load();
             
