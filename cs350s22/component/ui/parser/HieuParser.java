@@ -41,7 +41,7 @@ public class HieuParser {
         ReporterFrequency reporterFrequency;
         int deltaThreshold = Integer.parseInt(parseCommandText[parseCommandText.length - 1]);
 
-        if(parseCommandText[2].equals("CHANGE")) {
+        if(parseCommandText[2].equalsIgnoreCase("CHANGE")) {
             for(int i = 0; i < parseCommandText.length; i++) {
                 if(parseCommandText[i].equalsIgnoreCase("IDS") || parseCommandText[i].equalsIgnoreCase("ID")) {
                     for(int j = i + 1; j < parseCommandText.length; j++ ) {
