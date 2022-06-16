@@ -5,14 +5,12 @@ import cs350s22.support.Identifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 public class ParserHelper extends A_ParserHelper
 {
    public ParserHelper()
    {
       System.out.println("Welcome to your ParserHelper");
    }
-
 
    //scans through the array of tokens and returns the index of the first match of endRegex(case-insensitive).
    public int getEndIndex(final String [] tokens, int start, String endRegex)

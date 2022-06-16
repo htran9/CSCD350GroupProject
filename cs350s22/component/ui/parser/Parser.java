@@ -17,7 +17,6 @@ public class Parser {
         this.parserHelper = parserHelper;
         tokens = commandText.split(" ");
     }
-
     public void parse() throws IOException, ParseException {
 
         switch(tokens[0].toUpperCase())
@@ -32,7 +31,6 @@ public class Parser {
                         KeithParser k = new KeithParser((ParserHelper) parserHelper, commandText);
                         k.parse();
                         break;
-                    //Other CREATE Commands can go under here
                     case "REPORTER":
                     case "WATCHDOG":
                         HieuParser r = new HieuParser(parserHelper, commandText);
@@ -83,7 +81,6 @@ public class Parser {
                 throw new RuntimeException("Malformed command:" + System.lineSeparator() + commandText);
         }
     }
-
     private void parseClock()
     {
         if(tokens.length < 2)
