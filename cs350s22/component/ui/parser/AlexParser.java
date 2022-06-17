@@ -142,16 +142,15 @@ public class AlexParser {
         	
         	A_Message message;
         	
-        	if(tokens[2].equalsIgnoreCase("IDS?")) {
+        	if(tokens[2].matches("(i?)IDS?")) {
         		
-        		if(commandText.contains("(?i)GROUPS?")) {
+        		if(commandText.contains("GROUPS") ||commandText.contains("GROUP")) {
         			
         			int gIndex;
         			
-        			if(commandText.contains("(?i)GROUPS")) 
-        				gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
-        			else 
-        				gIndex = parserHelper.getEndIndex(tokens, 2, "GROUP");
+
+					gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS?");
+
         			
         			message = createRequestMessage(3, gIndex, "ID", value);
         			cLI.issueMessage(message);
@@ -169,7 +168,7 @@ public class AlexParser {
         		
         	}
         	
-        	else if(tokens[2].equalsIgnoreCase("GROUPS?")) {
+        	else if(tokens[2].matches("(i?)GROUPS?")) {
         		
         		
         		message = createRequestMessage(3, tokens.length-2, "GROUPS", value);
@@ -186,14 +185,13 @@ public class AlexParser {
         	
         	if(tokens[2].equalsIgnoreCase("ID") || tokens[2].equalsIgnoreCase("IDS")) {
         		
-        		if(commandText.contains("GROUPS")) {
+        		if(commandText.toUpperCase().contains("GROUPS") || commandText.toUpperCase().contains("GROUP")) {
         			
         			int gIndex;
         			
-        			if(commandText.contains("(?i)GROUPS")) 
-        				gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS");
-        			else 
-        				gIndex = parserHelper.getEndIndex(tokens, 2, "GROUP");
+
+					gIndex = parserHelper.getEndIndex(tokens, 2, "GROUPS?");
+
         			
         			message = createReportMessage(3, gIndex, "ID");
         			cLI.issueMessage(message);
@@ -211,7 +209,7 @@ public class AlexParser {
         		
         	}
         	
-        	else if(tokens[2].equalsIgnoreCase("GROUPS")) {
+        	else if(tokens[2].equalsIgnoreCase("GROUPS") || tokens[2].equalsIgnoreCase("GROUP")) {
         		
         		message = createReportMessage(3, tokens.length-1, "GROUPS");
     			cLI.issueMessage(message);
@@ -225,7 +223,7 @@ public class AlexParser {
     
     private A_Message createRequestMessage(int startIndex, int endIndex, String matcher, double value) {
     	
-    	List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex-1);
+    	List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
     	
     	if(matcher.equalsIgnoreCase("ID") || matcher.equalsIgnoreCase("IDS")) {
     		
@@ -245,7 +243,7 @@ public class AlexParser {
     
     private A_Message createReportMessage(int startIndex, int endIndex, String matcher) {
     	
-List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex-1);
+List<Identifier> idList = parserHelper.getIdentifiers(tokens, startIndex, endIndex);
     	
     	if(matcher.equalsIgnoreCase("ID") || matcher.equalsIgnoreCase("IDS")) {
     		
